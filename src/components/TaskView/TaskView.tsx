@@ -1,21 +1,28 @@
 import { Calendar } from "$/assets/svg/calendar";
 import { Clock } from "$/assets/svg/clock";
-import { useState } from "react";
+import { FC } from "react";
 import Button from "../Button/Button";
 import TaskForm from "../TaskForm/TaskForm";
+import { ITaskViewProps } from "./TaskView.types";
+import { deleteTodo, updateTodo } from "$/network/todos";
 
-const TaskView = () => {
-  const [isEdit, setIsEdit] = useState(false);
+const TaskView: FC<ITaskViewProps> = ({
+  selectedTask,
+  onEdit,
+  setIsEdit,
+  isEdit,
+  onDelete,
+}) => {
   return !isEdit ? (
     <div className="flex flex-col gap-8">
-      <p className="text-lg leading-7 text-gray-900 font-semibold font-workSans">
-        Create Wireframe
+      <p className="text-lg leading-7 text-gray-900 font-semibold font-workSans pr-6">
+        {selectedTask?.title ?? ""}
       </p>
       <div className=" flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <Calendar className="blue-calendar" />
           <p className="font-workSans text-base font-medium text-black">
-            20th January, 2023
+            {"Today"}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -26,7 +33,17 @@ const TaskView = () => {
         </div>
       </div>
       <div className="flex gap-3">
-        <Button variant="secondary">Delete</Button>
+        <Button
+          onClick={async () => {
+            onDelete(selectedTask?.id ?? 0);
+            deleteTodo({
+              id: selectedTask?.id ?? 0,
+            });
+          }}
+          variant="secondary"
+        >
+          Delete
+        </Button>
         <Button onClick={() => setIsEdit(true)} variant="primary">
           Edit
         </Button>
@@ -35,9 +52,18 @@ const TaskView = () => {
   ) : (
     <div>
       <TaskForm
-        handleSubmit={() => console.log("e")}
+        handleSubmit={async (neWInput) => {
+          onEdit(selectedTask?.id ?? 0, neWInput);
+          const res = await updateTodo({
+            completed: !!selectedTask?.completed,
+            id: selectedTask?.id ?? 0,
+            title: neWInput,
+            userId: 10,
+          });
+          console.log(res);
+        }}
         heading="Edit Task"
-        task="Create wireframe"
+        task={selectedTask?.title ?? ""}
         time=""
         buttonEls={
           <div className="flex gap-3">

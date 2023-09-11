@@ -1,25 +1,28 @@
 import { FC, useRef } from "react";
 import { ITaskListProps } from "./TaskList.types";
 import { Check } from "$/assets/svg/check";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateTodo } from "$/network/todos";
 
-const TaskList: FC<ITaskListProps> = ({ completed, onClick, id, title }) => {
+const TaskList: FC<ITaskListProps> = ({
+  completed,
+  onClick,
+  id,
+  title,
+  updateLocalTodos,
+  setTask,
+}) => {
   const checkboxRef = useRef<HTMLButtonElement | null>(null);
-
-  const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: updateTodo,
-    onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-    },
-  });
   return (
     <div
       onClick={(e) => {
         console.log(e.target, checkboxRef?.current);
         onClick(id);
+        setTask({
+          completed,
+          id,
+          title,
+          userId: 10,
+        });
       }}
       className={`border-[1px] border-gray-200 bg-gray-50 flex justify-between items-center py-4 px-6 cursor-pointer `}
     >
@@ -28,13 +31,16 @@ const TaskList: FC<ITaskListProps> = ({ completed, onClick, id, title }) => {
           //   onMouseDown={() => {
           //     setOnCheckbox(true);
           //   }}
-          onClick={() => {
+          onClick={async () => {
             // setOnCheckbox(true);
-            mutation.mutate({
+            updateLocalTodos(id);
+            const res = await updateTodo({
               id,
               completed: !completed,
               title: title,
+              userId: 10,
             });
+            console.log(res);
           }}
           //   onMouseOver={() => {
           //     setOnCheckbox(true);

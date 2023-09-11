@@ -4,6 +4,6 @@ export interface ITaskFormProps {
   heading: string;
   task: string;
   time: string;
-  handleSubmit: (task: string) => void;
+  handleSubmit: (task: string) => Promise<void>;
   buttonEls: ReactNode;
 }

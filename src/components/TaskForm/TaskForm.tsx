@@ -14,9 +14,10 @@ const TaskForm: FC<ITaskFormProps> = ({
   const [input, setInput] = useState(task);
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        handleSubmit(input);
+        await handleSubmit(input);
+        setInput("");
       }}
       className="w-full flex flex-col gap-4 mb-8"
     >
@@ -30,7 +31,7 @@ const TaskForm: FC<ITaskFormProps> = ({
         className="h-[140px] outline-none border-[1px] border-gray-300 focus:border-blue-one bg-gray-50 shadow-one rounded-lg py-3 px-[14px] placeholder:text-sm text-sm placeholder:text-gray-500 text-gray-600 font-normal leading-6 font-workSans"
       ></textarea>
       <div className="flex flex-wrap justify-between items-center grow">
-        <button className="py-[10px] px-4 gap-2 flex items-center h-10 text-sm font-semibold font-workSans leading-5 text-gray-500 bg-white border-[1px] rounded-lg border-gray-300">
+        <button className="py-[10px] px-2 md:px-3 gap-2 flex items-center h-10 text-sm font-semibold font-workSans leading-5 text-gray-500 bg-white border-[1px] rounded-lg border-gray-300">
           <Calendar />
           <span>Today</span>
         </button>
