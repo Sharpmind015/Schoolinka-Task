@@ -6,6 +6,7 @@ export interface ITaskLayoutProps {
   isMobileActionPaneOpen: boolean;
   setIsMobileActionPaneOpen: Dispatch<SetStateAction<boolean>>;
   status: Status;
+  setStatus: Dispatch<SetStateAction<Status>>;
   onCloseDesktopActionPane: () => void;
   taskLists: ReactNode;
 }

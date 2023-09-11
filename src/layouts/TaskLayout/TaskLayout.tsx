@@ -1,10 +1,30 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { ITaskLayoutProps } from "./TaskLayout.types";
 import Container from "../Container/Container";
 import useWindowWidth from "$/hooks/useWindowWidth";
 import DayCard from "$/components/DayCard/DayCard";
 import DesktopActionCard from "$/components/DesktopActionCard/DesktopActionCard";
 import MobileActionCard from "$/components/MobileActionCard/MobileActionCard";
+import { Microphone } from "$/assets/svg/mic";
+
+const getNext11Days = () => {
+  const today = new Date();
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const result = [];
+
+  for (let i = 0; i < 11; i++) {
+    today.setDate(today.getDate() + 1); // Move to the next day
+    const dayOfWeek = days[today.getDay()]; // Get the day of the week
+    const dayOfMonth = today.getDate(); // Get the day of the month
+
+    result.push({
+      dayOfWeek,
+      dayOfMonth,
+    });
+  }
+
+  return result;
+};
 
 const TaskLayout: FC<ITaskLayoutProps> = ({
   actionPane,
@@ -13,11 +33,14 @@ const TaskLayout: FC<ITaskLayoutProps> = ({
   onCloseDesktopActionPane,
   status,
   taskLists,
+  setStatus,
 }) => {
   const windowWidth = useWindowWidth();
+  const next11Days = getNext11Days();
+  const [activeDay, setIsActiveDay] = useState(next11Days[0].dayOfMonth);
 
   return (
-    <section className="mt-8">
+    <section className="mt-8 mb-10">
       <Container className="flex justify-between">
         <div className="w-full md:w-[65%]">
           <div className="-mr-4 flex flex-col gap-3 md:gap-4 mb-3 md:mb-4">
@@ -25,42 +48,28 @@ const TaskLayout: FC<ITaskLayoutProps> = ({
               January 2023
             </h2>
             <ul className="pl-[3px] list-none flex overflow-auto gap-4 day-list">
-              <li onClick={() => setIsMobileActionPaneOpen(true)}>
-                <DayCard day="Mon" number={1} isActive={false} />
-              </li>
-              <li>
-                <DayCard day="Tue" number={2} isActive={true} />
-              </li>
-              <li>
-                <DayCard day="Wed" number={3} isActive={false} />
-              </li>
-              <li>
-                <DayCard day="Thur" number={4} isActive={false} />
-              </li>
-              <li>
-                <DayCard day="Fri" number={5} isActive={false} />
-              </li>
-              <li>
-                <DayCard day="Sat" number={6} isActive={false} />
-              </li>
-              <li>
-                <DayCard day="Sun" number={7} isActive={false} />
-              </li>
-              <li>
-                <DayCard day="Mon" number={8} isActive={false} />
-              </li>
-              <li>
-                <DayCard day="Tue" number={9} isActive={false} />
-              </li>
-              <li>
-                <DayCard day="Wed" number={10} isActive={false} />
-              </li>
-              <li>
-                <DayCard day="Thur" number={11} isActive={false} />
-              </li>
+              {next11Days.map(({ dayOfMonth, dayOfWeek }) => (
+                <li key={dayOfMonth} onClick={() => setIsActiveDay(dayOfMonth)}>
+                  <DayCard
+                    day={dayOfWeek}
+                    number={dayOfMonth}
+                    isActive={activeDay === dayOfMonth}
+                  />
+                </li>
+              ))}
             </ul>
           </div>
           {taskLists}
+          <button
+            onClick={() => {
+              setIsMobileActionPaneOpen(true);
+              setStatus("add");
+            }}
+            className="w-full mt-4 flex md:hidden justify-between items-center rounded-lg border-[1px] border-gray-300 bg-gray-50 shadow-one gap-2 py-2 px-3 text-base font-workSans font-normal leading-6 text-gray-600"
+          >
+            <div className="grow text-left">Input task</div>
+            <Microphone />
+          </button>
         </div>
         {windowWidth >= 768 ? (
           <div className="w-full md:w-[32%] hidden md:block border-l-[1px] border-l-gray-200 pl-6">
