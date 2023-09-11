@@ -12,21 +12,31 @@ const TaskList: FC<ITaskListProps> = ({
   setTask,
 }) => {
   const checkboxRef = useRef<HTMLButtonElement | null>(null);
+  const handleClick = () => {
+    onClick(id);
+    setTask({
+      completed,
+      id,
+      title,
+      userId: 10,
+    });
+  };
   return (
     <div
-      onClick={(e) => {
-        console.log(e.target, checkboxRef?.current);
-        onClick(id);
-        setTask({
-          completed,
-          id,
-          title,
-          userId: 10,
-        });
-      }}
+      //   onClick={(event) => {
+      //     handleClick(event);
+      //   }}
       className={`border-[1px] border-gray-200 bg-gray-50 flex justify-between items-center py-4 px-6 cursor-pointer `}
     >
-      <div className="flex gap-3 items-center">
+      <div
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            console.log(event.target, checkboxRef?.current);
+            handleClick();
+          }
+        }}
+        className="flex gap-3 items-center"
+      >
         <button
           //   onMouseDown={() => {
           //     setOnCheckbox(true);
@@ -61,7 +71,12 @@ const TaskList: FC<ITaskListProps> = ({
             } transition-opacity`}
           />
         </button>
-        <div className="flex flex-col gap-1">
+        <div
+          onClick={() => {
+            handleClick();
+          }}
+          className="flex flex-col gap-1"
+        >
           <p
             className={`text-sm font-workSans font-medium leading-5 ${
               completed ? "text-gray-300" : "text-gray-900"
@@ -78,7 +93,12 @@ const TaskList: FC<ITaskListProps> = ({
           </p>
         </div>
       </div>
-      <p className="text-sm font-workSans font-normal leading-5 text-gray-600">
+      <p
+        onClick={() => {
+          handleClick();
+        }}
+        className="text-sm font-workSans font-normal leading-5 text-gray-600"
+      >
         Today
       </p>
     </div>
