@@ -1,27 +1,20 @@
 import { createTodo } from "$/network/todos";
+import { FC } from "react";
 import Button from "../Button/Button";
 import TaskForm from "../TaskForm/TaskForm";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ICreateTaskProps } from "./CreateTask.types";
 
-const CreateTask = () => {
-  const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: createTodo,
-    onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-    },
-  });
-
+const CreateTask: FC<ICreateTaskProps> = ({ refetchTasks }) => {
   return (
     <div>
       <TaskForm
-        handleSubmit={(task) =>
-          mutation.mutate({
-            completed: true,
+        handleSubmit={async (task) => {
+          const res = await createTodo({
+            completed: false,
             title: task,
-          })
-        }
+          });
+          refetchTasks(res.data);
+        }}
         heading="Add Task"
         task=""
         time=""

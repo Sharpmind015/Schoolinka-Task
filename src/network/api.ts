@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: " https://my-json-server.typicode.com/Sharpmind015/Schoolinka-Task",
+  baseURL: " https://jsonplaceholder.typicode.com/",
 });
 
 export default instance;
