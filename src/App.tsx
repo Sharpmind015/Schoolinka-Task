@@ -1,34 +1,45 @@
 import { useState } from "react";
-import reactLogo from "$/assets/react.svg";
-import viteLogo from "/vite.svg";
 import Header from "$/layouts/Header/Header";
+import Intro from "./components/Intro/Intro";
+import TaskLayout from "./layouts/TaskLayout/TaskLayout";
+import CreateTask from "./components/CreateTask/CreateTask";
+import { Status } from "./types/global";
+import TaskView from "./components/TaskView/TaskView";
+import TaskLists from "./components/TaskLists/TaskLists";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [isMobileActionPaneOpen, setIsMobileActionPaneOpen] =
+    useState<boolean>(false);
+  const [status, setStatus] = useState<Status>("init");
+
+  const actionPane =
+    status === "init" ? (
+      <></>
+    ) : status === "add" ? (
+      <CreateTask />
+    ) : (
+      <TaskView />
+    );
 
   return (
     <>
       <Header />
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Intro onClickAdd={() => setStatus("add")} />
+      <TaskLayout
+        isMobileActionPaneOpen={isMobileActionPaneOpen}
+        setIsMobileActionPaneOpen={setIsMobileActionPaneOpen}
+        actionPane={actionPane}
+        status={status}
+        onCloseDesktopActionPane={() => setStatus("init")}
+        taskLists={
+          <TaskLists
+            onClickTask={() => {
+              setIsMobileActionPaneOpen(true);
+              setStatus("view");
+            }}
+          />
+        }
+      />
     </>
   );
 }

@@ -4,6 +4,25 @@
 
 @layer base {
   button {
-    @apply outline-none border-none bg-none cursor-pointer;
+    /* @apply outline-none border-none bg-none cursor-pointer; */
+  }
+}
+
+@layer utilities {
+  .container {
+    @apply w-full sm:max-w-full md:max-w-[768px] lg:max-w-[1024px] xl:max-w-[1280px] 1xl:max-w-[1340px];
+  }
+  .blue-calendar path,
+  .blue-clock path {
+    @apply stroke-blue-one;
+  }
+  .decoration-line {
+    text-decoration-line: strikethrough;
+  }
+}
+
+@layer components {
+  .day-list::-webkit-scrollbar {
+    display: none;
   }
 }
