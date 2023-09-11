@@ -18,7 +18,7 @@ const MobileActionCard: FC<IMobileActionCardProps> = ({
         className="bg-black bg-opacity-40 w-full h-full"
       />
       <div
-        className={`min-h-[300px] absolute p-6 w-full h-fit bg-white rounded-t-[28px] shadow-two transition-all duration-300 delay-100 ${
+        className={`min-h-[200px] absolute p-6 w-full h-fit bg-white rounded-t-[28px] shadow-two transition-all duration-300 delay-100 ${
           !isOpen ? "-bottom-full" : "bottom-0"
         }`}
       >
