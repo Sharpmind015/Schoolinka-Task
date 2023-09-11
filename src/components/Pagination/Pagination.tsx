@@ -4,9 +4,7 @@ import { IPaginationProps } from "./Pagination.types";
 import { NUMBER_OF_ITEMS_PER_PAGE } from "$/constants";
 
 const Pagination: FC<IPaginationProps> = ({ page, setPage, total }) => {
-  //   const pages = total / NUMBER_OF_ITEMS_PER_PAGE;
-  console.log(total);
-  const totalPages = total / NUMBER_OF_ITEMS_PER_PAGE;
+  const totalPages = Math.ceil(total / NUMBER_OF_ITEMS_PER_PAGE);
 
   const getPageNumbers = () => {
     const pages: number[] = [];
